@@ -1,31 +1,38 @@
 fx_version 'cerulean'
 rdr3_warning 'I acknowledge that this is a prerelease build of RedM, and I am aware my resources *will* become incompatible once RedM ships.'
 game 'rdr3'
+lua54 'yes'
 
-description 'rsg-townhall'
-version '2.0.0'
+description 'rsg-townhall - Town Hall job vacancies, applications and approvals'
+version '3.0.0'
+
+ui_page 'html/index.html'
 
 shared_scripts {
-    '@ox_lib/init.lua',
+    '@rsg-core/shared/locale.lua',
     'shared/config.lua',
 }
 
 server_scripts {
+    '@oxmysql/lib/MySQL.lua',
+    'server/sv_config.lua',
     'server/server.lua',
-    'server/versionchecker.lua'
+    'server/versionchecker.lua',
 }
 
 client_scripts {
-    'client/client.lua'
+    'client/client.lua',
 }
 
 dependencies {
     'rsg-core',
-    'ox_lib',
+    'rsg-target',
+    'oxmysql',
 }
 
 files {
-  'locales/*.json'
+    'locales/*.json',
+    'html/index.html',
+    'html/style.css',
+    'html/script.js',
 }
-
-lua54 'yes'
