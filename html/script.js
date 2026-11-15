@@ -410,16 +410,16 @@ async function renderMine(body) {
     clear(view);
     if (!res.ok) { view.append(h('div', 'empty', res.err)); return; }
     const apps = res.applications || [];
+    if (perms.unseen > 0) clearUnseen();
     if (!apps.length) { view.append(h('div', 'empty', t('ui_no_apps'))); return; }
 
     const list = h('div', 'list');
-    let hadUnseen = false;
     apps.forEach(a => {
         const row = h('div', 'row click');
         const main = h('div', 'row-main');
         main.append(h('div', 'row-title', a.title), h('div', 'row-sub', `${a.jobLabel} · ${a.gradeLabel} · ${fmtDate(a.created)}`));
         const side = h('div', 'row-side');
-        if (a.unseen) { hadUnseen = true; side.append(h('span', 'dot')); }
+        if (a.unseen) side.append(h('span', 'dot'));
         if (a.queued) side.append(h('span', 'pill warn', t('ui_queued')));
         side.append(pill(a.status));
         row.append(h('div', 'icon-badge', '✦'), main, side);
@@ -428,12 +428,13 @@ async function renderMine(body) {
     });
     view.append(list);
 
-    if (hadUnseen) {
-        rpc('markSeen');
-        perms.unseen = 0;
-        const badge = document.querySelector('#tabs .badge');
-        if (badge) badge.remove();
-    }
+}
+
+// Reviewed: tell the server, then drop the "My applications" tab badge
+function clearUnseen() {
+    rpc('markSeen');
+    perms.unseen = 0;
+    buildTabs();
 }
 
 function openMyApplication(a) {
@@ -531,6 +532,7 @@ async function renderManage(body) {
     const res = await rpc('getManageData');
     if (!res.ok) { clear(view); view.append(h('div', 'empty', res.err)); return; }
     manage = res;
+    if (perms.pending !== manage.pending.length) { perms.pending = manage.pending.length; buildTabs(); }
 
     const defs = [
         { id: 'apps', label: t('ui_manage_apps'), badge: manage.pending.length },

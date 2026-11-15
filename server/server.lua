@@ -527,7 +527,7 @@ RSGCore.Functions.CreateCallback('rsg-townhall:server:getPerms', function(source
     if not Player then cb(fail(err)) return end
     local scope = getScope(source, Player)
     grantPending(Player)
-    local unseen = MySQL.scalar.await("SELECT COUNT(*) FROM townhall_applications WHERE citizenid = ? AND seen = 0", { Player.PlayerData.citizenid }) or 0
+    local unseen = MySQL.scalar.await("SELECT COUNT(*) FROM townhall_applications a JOIN townhall_postings p ON p.id = a.posting_id WHERE a.citizenid = ? AND a.seen = 0", { Player.PlayerData.citizenid }) or 0
     local pendingReview = pendingReviewCount(scope)
     local loc = Locations[nearestLocation(source)]
     cb({

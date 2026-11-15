@@ -43,6 +43,8 @@ All are `RSGCore.Functions.CreateCallback('rsg-townhall:server:<name>')`, answer
 |---|---|---|---|
 | `getLocations` | client | – | Clerk list (no distance check) |
 | `getPerms` | any | – | `admin`, `manage`, `unseen`, `pending` (reviews waiting for the caller), limits |
+
+Tab badges: **My applications** shows `unseen` (decisions not yet viewed, counted only for applications whose posting still exists) and clears as soon as the tab is opened (`markSeen`). **Manage** shows `pending` and refreshes from the live pending list each time the tab loads, so it drops after a review.
 | `getVacancies` | any | – | Open postings with questions, slots, expiry, prerequisites and the caller's state (`open`, `applied`, `cooldown`, `holds`, `blocked`, `locked`) and the application `fee` |
 | `apply` | any | `postingId`, `answers[]` | Submit an application |
 | `getMyApplications` | any | – | Caller's last 50 applications |
